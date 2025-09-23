@@ -99,7 +99,7 @@ const AdminDashboard = () => {
         ...filters
       });
 
-      const response = await axios.get(`http://localhost:5000/api/registrations?${params}`, {
+      const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/registrations?${params}`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -133,7 +133,7 @@ const AdminDashboard = () => {
     if (window.confirm('Are you sure you want to delete this registration?')) {
       try {
         const token = localStorage.getItem('token');
-        await axios.delete(`http://localhost:5000/api/registrations/${id}`, {
+        await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/api/registrations/${id}`, {
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -274,7 +274,7 @@ const AdminDashboard = () => {
     setSubmitting(true);
     try {
       const token = localStorage.getItem('token');
-      await axios.post('http://localhost:5000/api/registrations/admin', formData, {
+      await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/registrations/admin`, formData, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -298,7 +298,7 @@ const AdminDashboard = () => {
     setSubmitting(true);
     try {
       const token = localStorage.getItem('token');
-      await axios.put(`http://localhost:5000/api/registrations/${editingRegistration.id}`, formData, {
+      await axios.put(`${import.meta.env.VITE_API_BASE_URL}/api/registrations/${editingRegistration.id}`, formData, {
         headers: {
           Authorization: `Bearer ${token}`
         }

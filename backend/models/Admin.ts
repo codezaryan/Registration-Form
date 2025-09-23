@@ -1,4 +1,4 @@
-import bcrypt from 'bcryptjs';
+const bcrypt = require('bcryptjs');
 import fs from 'fs/promises';
 import path from 'path';
 

@@ -18,7 +18,7 @@ router.get('/:id', getRegistrationById);
 router.post('/', upload.fields([
   { name: 'photo', maxCount: 1 },
   { name: 'video', maxCount: 1 }
-]) as any, createRegistration);
+]), createRegistration);
 router.post('/admin', createAdminRegistration); // Admin-only endpoint without file requirements
 router.put('/:id', updateRegistration);
 router.delete('/:id', deleteRegistration);

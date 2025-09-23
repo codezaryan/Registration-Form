@@ -141,7 +141,7 @@ const RegistrationForm = () => {
       if (photo) submitData.append('photo', photo);
       if (video) submitData.append('video', video);
 
-      await axios.post('http://localhost:5000/api/registrations', submitData, {
+      await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/registrations`, submitData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }

@@ -1,5 +1,5 @@
 import express from 'express';
-import bcrypt from 'bcryptjs';
+const bcrypt = require('bcryptjs');
 import jwt from 'jsonwebtoken';
 import { Admin } from '../../models/Admin';
 
