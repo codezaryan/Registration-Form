@@ -5,6 +5,7 @@ import path from 'path';
 import fs from 'fs/promises';
 
 // Configure Cloudinary only if credentials are provided
+let isCloudinaryConfigured = false;
 if (process.env.CLOUDINARY_CLOUD_NAME &&
     process.env.CLOUDINARY_API_KEY &&
     process.env.CLOUDINARY_API_SECRET) {
@@ -13,6 +14,7 @@ if (process.env.CLOUDINARY_CLOUD_NAME &&
     api_key: process.env.CLOUDINARY_API_KEY,
     api_secret: process.env.CLOUDINARY_API_SECRET,
   });
+  isCloudinaryConfigured = true;
 }
 
 export const upload = multer({
@@ -22,13 +24,13 @@ export const upload = multer({
   },
   fileFilter: (req, file, cb) => {
     if (file.fieldname === 'photo') {
-      if (file.mimetype.startsWith('image/')) {
+      if (file.mimetype.startsWith('image/') || file.mimetype === 'application/octet-stream') {
         cb(null, true);
       } else {
         cb(new Error('Only image files are allowed for photos'));
       }
     } else if (file.fieldname === 'video') {
-      if (file.mimetype.startsWith('video/')) {
+      if (file.mimetype.startsWith('video/') || file.mimetype === 'application/octet-stream') {
         cb(null, true);
       } else {
         cb(new Error('Only video files are allowed for videos'));
@@ -67,9 +69,7 @@ const saveToLocalStorage = async (buffer: Buffer, folder: string, filename: stri
 
 export const uploadToCloudinary = async (buffer: Buffer, folder: string, resourceType: 'image' | 'video' = 'image'): Promise<any> => {
   // Check if Cloudinary is configured
-  if (!process.env.CLOUDINARY_CLOUD_NAME ||
-      !process.env.CLOUDINARY_API_KEY ||
-      !process.env.CLOUDINARY_API_SECRET) {
+  if (!isCloudinaryConfigured) {
     console.log('⚠️ Cloudinary not configured, using local storage fallback');
 
     // Generate filename with timestamp

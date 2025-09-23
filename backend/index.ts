@@ -25,6 +25,9 @@ app.use('/uploads', express.static(path.join(__dirname, 'src/uploads')));
 app.use('/api/registrations', registrationRoutes);
 app.use('/api/auth', authRoutes);
 
+// Serve uploaded files statically
+app.use('/uploads', express.static(path.join(__dirname, 'src/uploads')));
+
 // Health check endpoint
 app.get('/api/health', (req: express.Request, res: express.Response) => {
   res.json({ 
