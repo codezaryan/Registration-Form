@@ -55,7 +55,7 @@
   },
   {
     "id": 4,
-    "fullName": "Test User",
+    "fullName": "Test User B",
     "dateOfBirth": "1990-01-01",
     "gender": "Male",
     "mobileNumber": "1234567890",
@@ -69,24 +69,24 @@
     "photoUrl": "http://localhost:5000/uploads/photos/1758610887748.jpg",
     "videoUrl": "http://localhost:5000/uploads/videos/1758610887749.mp4",
     "createdAt": "2025-09-23T07:01:27.755Z",
-    "updatedAt": "2025-09-23T07:01:27.755Z"
+    "updatedAt": "2025-09-23T07:19:32.753Z"
   },
   {
     "id": 5,
-    "fullName": "Dharmendra Kurmi",
-    "dateOfBirth": "2008-09-16",
+    "fullName": "Test Delete UI",
+    "dateOfBirth": "1990-01-01",
     "gender": "Male",
-    "mobileNumber": "7846415264",
-    "email": "dharmendrakurmi982@gmail.com",
-    "aadhaarNumber": "784514251648",
-    "panNumber": "FAYPP9701M",
-    "permanentAddress": "Jabalpur",
-    "state": "mp",
-    "city": "Jabalpur",
-    "pincode": "482001",
-    "photoUrl": "http://localhost:5000/uploads/photos/1758610986737.jpg",
-    "videoUrl": "http://localhost:5000/uploads/videos/1758610986738.mp4",
-    "createdAt": "2025-09-23T07:03:06.747Z",
-    "updatedAt": "2025-09-23T07:03:06.747Z"
+    "mobileNumber": "1234567890",
+    "email": "deleteui@test.com",
+    "aadhaarNumber": "123456789012",
+    "panNumber": "ABCDE1234F",
+    "permanentAddress": "Test Address",
+    "state": "Test State",
+    "city": "Test City",
+    "pincode": "123456",
+    "photoUrl": "/placeholder-photo.jpg",
+    "videoUrl": "/placeholder-video.mp4",
+    "createdAt": "2025-09-23T07:23:34.855Z",
+    "updatedAt": "2025-09-23T07:23:34.855Z"
   }
 ]

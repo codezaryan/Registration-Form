@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 interface Registration {
-  _id: string;
+  id: number;
   fullName: string;
   dateOfBirth: string;
   gender: string;
@@ -17,6 +17,8 @@ interface Registration {
   pincode: string;
   photoUrl: string;
   videoUrl: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 interface FilterState {
@@ -127,6 +129,7 @@ const AdminDashboard = () => {
   };
 
   const handleDelete = async (id: string) => {
+    console.log('Delete called with ID:', id);
     if (window.confirm('Are you sure you want to delete this registration?')) {
       try {
         const token = localStorage.getItem('token');
@@ -135,14 +138,21 @@ const AdminDashboard = () => {
             Authorization: `Bearer ${token}`
           }
         });
-        fetchRegistrations();
+        alert('Registration deleted successfully');
+        await fetchRegistrations();
       } catch (error) {
         console.error('Error deleting registration:', error);
-        if (axios.isAxiosError(error) && error.response?.status === 401) {
-          // Token expired or invalid, redirect to login
-          localStorage.removeItem('token');
-          localStorage.removeItem('isAuthenticated');
-          window.location.href = '/admin/login';
+        if (axios.isAxiosError(error)) {
+          if (error.response?.status === 401) {
+            alert('Authentication failed. Please log in again.');
+            localStorage.removeItem('token');
+            localStorage.removeItem('isAuthenticated');
+            window.location.href = '/admin/login';
+          } else {
+            alert(`Error deleting registration: ${error.response?.data?.error || error.message}`);
+          }
+        } else {
+          alert('An unexpected error occurred while deleting the registration.');
         }
       }
     }
@@ -288,7 +298,7 @@ const AdminDashboard = () => {
     setSubmitting(true);
     try {
       const token = localStorage.getItem('token');
-      await axios.put(`http://localhost:5000/api/registrations/${editingRegistration._id}`, formData, {
+      await axios.put(`http://localhost:5000/api/registrations/${editingRegistration.id}`, formData, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -433,7 +443,7 @@ const AdminDashboard = () => {
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {registrations.map((reg) => (
-                <tr key={reg._id} className="hover:bg-gray-50">
+                <tr key={reg.id} className="hover:bg-gray-50">
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div>
                       <div className="text-sm font-medium text-gray-900">{reg.fullName}</div>
@@ -479,7 +489,7 @@ const AdminDashboard = () => {
                       Edit
                     </button>
                     <button
-                      onClick={() => handleDelete(reg._id)}
+                      onClick={() => handleDelete(reg.id.toString())}
                       className="text-red-600 hover:text-red-900"
                     >
                       Delete
