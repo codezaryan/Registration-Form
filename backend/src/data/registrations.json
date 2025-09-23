@@ -1,0 +1,38 @@
+[
+  {
+    "id": 1,
+    "fullName": "Test Admin Registration",
+    "dateOfBirth": "1990-01-01",
+    "gender": "Male",
+    "mobileNumber": "1234567890",
+    "email": "admin@test.com",
+    "aadhaarNumber": "123456789012",
+    "panNumber": "ABCDE1234F",
+    "permanentAddress": "Test Address",
+    "state": "Test State",
+    "city": "Test City",
+    "pincode": "123456",
+    "photoUrl": "/placeholder-photo.jpg",
+    "videoUrl": "/placeholder-video.mp4",
+    "createdAt": "2025-09-23T06:36:55.829Z",
+    "updatedAt": "2025-09-23T06:36:55.829Z"
+  },
+  {
+    "id": 2,
+    "fullName": "aryan",
+    "dateOfBirth": "2002-08-20",
+    "gender": "Male",
+    "mobileNumber": "7845125523",
+    "email": "aryanpatel7987@gmail.com",
+    "aadhaarNumber": "232234544354",
+    "panNumber": "FZYPP9701H",
+    "permanentAddress": "Mumbai",
+    "state": "Maharashtra",
+    "city": "Mumbai",
+    "pincode": "230002",
+    "photoUrl": "/placeholder-photo.jpg",
+    "videoUrl": "/placeholder-video.mp4",
+    "createdAt": "2025-09-23T06:44:50.154Z",
+    "updatedAt": "2025-09-23T06:44:50.154Z"
+  }
+]
