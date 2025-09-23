@@ -70,23 +70,5 @@
     "videoUrl": "http://localhost:5000/uploads/videos/1758610887749.mp4",
     "createdAt": "2025-09-23T07:01:27.755Z",
     "updatedAt": "2025-09-23T07:19:32.753Z"
-  },
-  {
-    "id": 5,
-    "fullName": "Test Delete UI",
-    "dateOfBirth": "1990-01-01",
-    "gender": "Male",
-    "mobileNumber": "1234567890",
-    "email": "deleteui@test.com",
-    "aadhaarNumber": "123456789012",
-    "panNumber": "ABCDE1234F",
-    "permanentAddress": "Test Address",
-    "state": "Test State",
-    "city": "Test City",
-    "pincode": "123456",
-    "photoUrl": "/placeholder-photo.jpg",
-    "videoUrl": "/placeholder-video.mp4",
-    "createdAt": "2025-09-23T07:23:34.855Z",
-    "updatedAt": "2025-09-23T07:23:34.855Z"
   }
 ]
