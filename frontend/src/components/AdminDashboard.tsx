@@ -89,7 +89,7 @@ const AdminDashboard = () => {
     fetchRegistrations();
   }, [filters, pagination.currentPage, navigate]);
 
-  const fetchRegistrations = async () => {
+  const fetchRegistrations = async (retryCount = 0) => {
     try {
       setLoading(true);
       const token = localStorage.getItem('token');
@@ -102,7 +102,8 @@ const AdminDashboard = () => {
       const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/registrations?${params}`, {
         headers: {
           Authorization: `Bearer ${token}`
-        }
+        },
+        timeout: 10000 // 10 second timeout
       });
       setRegistrations(response.data.registrations);
       setPagination(prev => ({
@@ -112,11 +113,23 @@ const AdminDashboard = () => {
       }));
     } catch (error) {
       console.error('Error fetching registrations:', error);
+
+      // Retry logic for network errors
+      if (retryCount < 2 && (axios.isAxiosError(error) && !error.response)) {
+        console.log(`Retrying request (attempt ${retryCount + 1})...`);
+        setTimeout(() => fetchRegistrations(retryCount + 1), 1000 * (retryCount + 1));
+        return;
+      }
+
       if (axios.isAxiosError(error) && error.response?.status === 401) {
         // Token expired or invalid, redirect to login
         localStorage.removeItem('token');
         localStorage.removeItem('isAuthenticated');
         window.location.href = '/admin/login';
+      } else if (axios.isAxiosError(error)) {
+        alert(`Error fetching registrations: ${error.response?.data?.error || error.message}`);
+      } else {
+        alert('An unexpected error occurred while fetching registrations.');
       }
     } finally {
       setLoading(false);
@@ -136,12 +149,26 @@ const AdminDashboard = () => {
         await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/api/registrations/${id}`, {
           headers: {
             Authorization: `Bearer ${token}`
-          }
+          },
+          timeout: 10000
         });
+
+        // Optimistically update UI
+        setRegistrations(prev => prev.filter(reg => reg.id.toString() !== id));
+        const currentTotal = pagination.total - 1;
+        setPagination(prev => ({
+          ...prev,
+          total: currentTotal,
+          totalPages: Math.ceil(currentTotal / prev.limit)
+        }));
+
         alert('Registration deleted successfully');
-        await fetchRegistrations();
       } catch (error) {
         console.error('Error deleting registration:', error);
+
+        // Revert optimistic update on error
+        await fetchRegistrations();
+
         if (axios.isAxiosError(error)) {
           if (error.response?.status === 401) {
             alert('Authentication failed. Please log in again.');
@@ -274,17 +301,32 @@ const AdminDashboard = () => {
     setSubmitting(true);
     try {
       const token = localStorage.getItem('token');
-      await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/registrations/admin`, formData, {
+      const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/registrations/admin`, formData, {
         headers: {
           Authorization: `Bearer ${token}`
-        }
+        },
+        timeout: 15000 // 15 second timeout for file uploads
       });
+
+      // Optimistically add new registration to the list
+      const newRegistration = response.data.registration;
+      setRegistrations(prev => [newRegistration, ...prev]);
+      setPagination(prev => ({
+        ...prev,
+        total: prev.total + 1,
+        totalPages: Math.ceil((prev.total + 1) / prev.limit)
+      }));
+
       closeModals();
-      fetchRegistrations();
+      alert('Registration created successfully');
     } catch (error: any) {
       console.error('Error creating registration:', error);
       if (error.response?.data?.error) {
         setFormErrors({ general: error.response.data.error });
+      } else if (error.code === 'ECONNABORTED') {
+        setFormErrors({ general: 'Request timeout. Please try again.' });
+      } else {
+        setFormErrors({ general: 'An unexpected error occurred. Please try again.' });
       }
     } finally {
       setSubmitting(false);
@@ -298,17 +340,33 @@ const AdminDashboard = () => {
     setSubmitting(true);
     try {
       const token = localStorage.getItem('token');
-      await axios.put(`${import.meta.env.VITE_API_BASE_URL}/api/registrations/${editingRegistration.id}`, formData, {
+      const response = await axios.put(`${import.meta.env.VITE_API_BASE_URL}/api/registrations/${editingRegistration.id}`, formData, {
         headers: {
           Authorization: `Bearer ${token}`
-        }
+        },
+        timeout: 10000
       });
+
+      // Optimistically update the registration in the list
+      const updatedRegistration = response.data.registration;
+      setRegistrations(prev => prev.map(reg =>
+        reg.id === editingRegistration.id ? updatedRegistration : reg
+      ));
+
       closeModals();
-      fetchRegistrations();
+      alert('Registration updated successfully');
     } catch (error: any) {
       console.error('Error updating registration:', error);
+
+      // Revert optimistic update on error
+      await fetchRegistrations();
+
       if (error.response?.data?.error) {
         setFormErrors({ general: error.response.data.error });
+      } else if (error.code === 'ECONNABORTED') {
+        setFormErrors({ general: 'Request timeout. Please try again.' });
+      } else {
+        setFormErrors({ general: 'An unexpected error occurred. Please try again.' });
       }
     } finally {
       setSubmitting(false);
