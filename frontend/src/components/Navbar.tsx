@@ -54,12 +54,20 @@ const Navbar = () => {
                 Admin Login
               </Link>
             ) : (
-              <button
-                onClick={handleLogout}
-                className="hover:bg-blue-700 px-3 py-2 rounded-md transition-colors"
-              >
-                Logout
-              </button>
+              <>
+                <Link
+                  to="/admin/dashboard"
+                  className="hover:bg-blue-700 px-3 py-2 rounded-md transition-colors"
+                >
+                  Dashboard
+                </Link>
+                <button
+                  onClick={handleLogout}
+                  className="hover:bg-blue-700 px-3 py-2 rounded-md transition-colors"
+                >
+                  Logout
+                </button>
+              </>
             )}
           </div>
         </div>
