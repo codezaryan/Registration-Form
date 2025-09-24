@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const AdminLogin = () => {
   const [credentials, setCredentials] = useState({
@@ -16,15 +17,14 @@ const AdminLogin = () => {
     setError('');
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/auth/login`, {
-        method: 'POST',
+      const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/auth/login`, credentials, {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(credentials),
+        withCredentials: true // Include credentials for CORS
       });
 
-      const data = await response.json();
+      const data = response.data;
 
       if (data.success) {
         localStorage.setItem('token', data.token);
@@ -35,8 +35,18 @@ const AdminLogin = () => {
       } else {
         setError(data.message || 'Login failed');
       }
-    } catch (err) {
-      setError('Network error. Please check if the backend server is running.');
+    } catch (err: any) {
+      console.error('Login error:', err);
+      if (err.response) {
+        // Server responded with error status
+        setError(err.response.data.error || 'Login failed');
+      } else if (err.request) {
+        // Network error
+        setError('Network error. Please check if the backend server is running.');
+      } else {
+        // Other error
+        setError('An unexpected error occurred. Please try again.');
+      }
     } finally {
       setLoading(false);
     }
