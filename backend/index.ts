@@ -134,7 +134,7 @@ app.use((req: express.Request, res: express.Response) => {
   }
 
   // For development, serve a simple message
-  res.status(404).send(`
+  return res.status(404).send(`
     <h1>404 - Page Not Found</h1>
     <p>This is the backend API server running on port ${PORT}.</p>
     <p>Frontend is likely running on <a href="http://localhost:5173">http://localhost:5173</a></p>
